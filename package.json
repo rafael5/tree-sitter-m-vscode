@@ -1,0 +1,86 @@
+{
+  "name": "tree-sitter-m-vscode",
+  "displayName": "M (MUMPS)",
+  "description": "Syntax highlighting and language support for the M (MUMPS) programming language. Powered by tree-sitter-m once the npm package publishes.",
+  "version": "0.1.0",
+  "publisher": "rafael5",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafael5/tree-sitter-m-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rafael5/tree-sitter-m-vscode/issues"
+  },
+  "homepage": "https://github.com/rafael5/tree-sitter-m-vscode#readme",
+  "keywords": [
+    "m",
+    "mumps",
+    "vista",
+    "yottadb",
+    "iris",
+    "tree-sitter"
+  ],
+  "categories": [
+    "Programming Languages"
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "m",
+        "aliases": [
+          "M",
+          "MUMPS",
+          "M (MUMPS)"
+        ],
+        "extensions": [
+          ".m",
+          ".mac",
+          ".int"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "m",
+        "scopeName": "source.m",
+        "path": "./syntaxes/m.tmLanguage.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[m]": {
+        "editor.tabSize": 1,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "editor.semanticHighlighting.enabled": true
+      }
+    },
+    "commands": [
+      {
+        "command": "tree-sitter-m.about",
+        "title": "M (MUMPS): About this extension"
+      }
+    ]
+  },
+  "activationEvents": [
+    "onLanguage:m"
+  ],
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "lint": "tsc -noEmit -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "typescript": "^5.4.0"
+  }
+}

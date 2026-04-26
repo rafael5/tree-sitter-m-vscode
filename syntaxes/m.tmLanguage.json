@@ -1,0 +1,90 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "M",
+  "scopeName": "source.m",
+  "fileTypes": ["m", "mac", "int"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#labels" },
+    { "include": "#commands" },
+    { "include": "#extrinsic-functions" },
+    { "include": "#intrinsic-functions" },
+    { "include": "#special-variables" },
+    { "include": "#globals" },
+    { "include": "#indirection" },
+    { "include": "#operators" },
+    { "include": "#format-control" }
+  ],
+  "repository": {
+    "comments": {
+      "match": ";.*$",
+      "name": "comment.line.semicolon.m"
+    },
+
+    "strings": {
+      "name": "string.quoted.double.m",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "match": "\"\"",
+          "name": "constant.character.escape.doubled-quote.m"
+        }
+      ]
+    },
+
+    "numbers": {
+      "match": "\\b\\d+(?:\\.\\d+)?(?:[Ee][+-]?\\d+)?\\b|(?<![\\w.])\\.\\d+(?:[Ee][+-]?\\d+)?",
+      "name": "constant.numeric.m"
+    },
+
+    "labels": {
+      "match": "^([%A-Za-z][%A-Za-z0-9]*|\\d+)(?=\\s|\\(|$)",
+      "captures": {
+        "1": { "name": "entity.name.function.label.m" }
+      }
+    },
+
+    "commands": {
+      "match": "(?i)(?<![\\w$])(B|BR|BRE|BREA|BREAK|C|CL|CLO|CLOS|CLOSE|D|DO|E|EL|ELS|ELSE|F|FO|FOR|G|GO|GOT|GOTO|H|HA|HAL|HALT|HAN|HANG|I|IF|J|JO|JOB|K|KI|KIL|KILL|L|LO|LOC|LOCK|M|ME|MER|MERG|MERGE|N|NE|NEW|O|OP|OPE|OPEN|Q|QU|QUI|QUIT|R|RE|REA|READ|S|SE|SET|TC|TCO|TCOM|TCOMM|TCOMMI|TCOMMIT|TR|TRE|TRES|TREST|TRESTA|TRESTAR|TRESTART|TRO|TROL|TROLL|TROLLB|TROLLBA|TROLLBAC|TROLLBACK|TS|TST|TSTA|TSTAR|TSTART|U|US|USE|V|VI|VIE|VIEW|W|WR|WRI|WRIT|WRITE|X|XE|XEC|XECU|XECUT|XECUTE|Z|ZA[A-Z]*|ZB[A-Z]*|ZC[A-Z]*|ZD[A-Z]*|ZE[A-Z]*|ZG[A-Z]*|ZH[A-Z]*|ZI[A-Z]*|ZK[A-Z]*|ZL[A-Z]*|ZM[A-Z]*|ZN[A-Z]*|ZP[A-Z]*|ZR[A-Z]*|ZS[A-Z]*|ZT[A-Z]*|ZU[A-Z]*|ZW[A-Z]*|ZY[A-Z]*|ZZ[A-Z]*|CATCH|THROW|TRY|WHILE|CONTINUE|RETURN|ELSEIF|PRINT|THEN)(?=\\s|:|$)",
+      "name": "keyword.control.command.m"
+    },
+
+    "extrinsic-functions": {
+      "match": "\\$\\$(?:\\^?[%A-Za-z][%A-Za-z0-9]*(?:\\^[%A-Za-z][%A-Za-z0-9]*)?|\\d+\\^[%A-Za-z][%A-Za-z0-9]*)",
+      "name": "entity.name.function.extrinsic.m"
+    },
+
+    "intrinsic-functions": {
+      "match": "\\$[A-Za-z]+(?=\\()",
+      "name": "support.function.intrinsic.m"
+    },
+
+    "special-variables": {
+      "match": "\\$[A-Za-z][A-Za-z0-9]*(?!\\()",
+      "name": "support.variable.special.m"
+    },
+
+    "globals": {
+      "match": "\\^[%A-Za-z]?[%A-Za-z0-9]*",
+      "name": "variable.other.global.m"
+    },
+
+    "indirection": {
+      "match": "@",
+      "name": "keyword.operator.indirection.m"
+    },
+
+    "operators": {
+      "match": "'?(?:>=|<=|!=|\\*\\*|\\]\\]|[#*+\\-/\\\\!&'<>=_\\[\\]])",
+      "name": "keyword.operator.m"
+    },
+
+    "format-control": {
+      "match": "(?<=,|\\s)(?:!|#|\\?\\d+|\\*[A-Za-z0-9]+)",
+      "name": "punctuation.special.format-control.m"
+    }
+  }
+}
