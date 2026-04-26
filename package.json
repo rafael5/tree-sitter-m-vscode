@@ -52,6 +52,27 @@
         "path": "./syntaxes/m.tmLanguage.json"
       }
     ],
+    "semanticTokenScopes": [
+      {
+        "language": "m",
+        "scopes": {
+          "keyword": ["keyword.control.command.m"],
+          "keyword.defaultLibrary": ["support.constant.pattern-code.m"],
+          "function": ["entity.name.function.m"],
+          "function.declaration": ["entity.name.function.label.m"],
+          "function.defaultLibrary": ["support.function.intrinsic.m"],
+          "variable": ["variable.other.m"],
+          "variable.defaultLibrary": ["support.variable.special.m"],
+          "variable.defaultLibrary.readonly": ["support.variable.special.m"],
+          "parameter": ["variable.parameter.m"],
+          "parameter.declaration": ["variable.parameter.declaration.m"],
+          "string": ["string.quoted.double.m"],
+          "number": ["constant.numeric.m"],
+          "comment": ["comment.line.semicolon.m"],
+          "operator": ["keyword.operator.m"]
+        }
+      }
+    ],
     "configurationDefaults": {
       "[m]": {
         "editor.tabSize": 1,

@@ -74,6 +74,80 @@ If semantic tokens never appear, check that
 `editor.semanticHighlighting.enabled` resolves to `true` for `[m]` —
 the extension defaults it on, but the user may have overridden.
 
+## Customizing colors
+
+The extension emits standard VS Code semantic token types (`keyword`,
+`function`, `variable`, `parameter`, `string`, `number`, `comment`,
+`operator`) with `defaultLibrary` / `readonly` / `declaration`
+modifiers where they apply. Colors come from your active theme.
+
+### Out-of-the-box (no setup)
+
+The extension declares `contributes.semanticTokenScopes` in its
+manifest, mapping each semantic-token type back to a TextMate scope
+(`keyword.control.command.m`, `support.function.intrinsic.m`, etc.)
+that virtually every theme already styles. Result: commands appear
+distinct from intrinsic functions appear distinct from special
+variables under any reasonable theme — Default Dark/Light Modern,
+GitHub Dark/Light, One Dark Pro, Dracula, etc.
+
+### Per-theme tuning (optional)
+
+To override or refine, drop into `settings.json`:
+
+```json
+"editor.semanticTokenColorCustomizations": {
+  "rules": {
+    "keyword:m":                          { "foreground": "#C586C0", "bold": true },
+    "function.defaultLibrary:m":          { "foreground": "#DCDCAA" },
+    "function.declaration:m":             { "foreground": "#4EC9B0", "bold": true },
+    "function:m":                         { "foreground": "#DCDCAA" },
+    "variable.defaultLibrary.readonly:m": { "foreground": "#4FC1FF", "italic": true },
+    "variable:m":                         { "foreground": "#9CDCFE" },
+    "parameter.declaration:m":            { "foreground": "#9CDCFE", "italic": true, "bold": true },
+    "parameter:m":                        { "foreground": "#9CDCFE", "italic": true },
+    "keyword.defaultLibrary:m":           { "foreground": "#CE9178" },
+    "operator:m":                         { "foreground": "#D4D4D4" }
+  }
+}
+```
+
+The `:m` suffix on each selector scopes the rule to M files only.
+Drop the suffix to apply globally.
+
+To restrict overrides to a specific theme, wrap the rules in a
+theme-name key:
+
+```json
+"editor.semanticTokenColorCustomizations": {
+  "[Default Dark Modern]": {
+    "rules": {
+      "keyword:m": { "foreground": "#C586C0", "bold": true }
+    }
+  },
+  "[GitHub Light Default]": {
+    "rules": {
+      "keyword:m": { "foreground": "#CF222E", "bold": true }
+    }
+  }
+}
+```
+
+### Inspecting what's happening
+
+Place the cursor on any token and run **Inspect Editor Tokens and
+Scopes** from the Command Palette. The hover panel shows:
+
+- **TextMate scopes** — the regex grammar's scope chain.
+- **Semantic token type / modifiers** — what our provider emitted.
+- **Foreground color** — which rule won and where it came from
+  (theme, semantic, or your override).
+
+If a token shows the right semantic type but the wrong color,
+override is the answer. If it shows no semantic type at all,
+`editor.semanticHighlighting.enabled` is off or the provider didn't
+fire on this file (check the language mode in the bottom-right).
+
 ## Batch testing a directory of M routines
 
 Three ways, increasing power:
