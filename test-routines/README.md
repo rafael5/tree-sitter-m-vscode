@@ -91,3 +91,30 @@ Every file should print `ok`. If any prints `FAIL`, that file has a
 construct the parser can't currently handle — either a real bug, or
 a known scope-locked-out construct (like ObjectScript) that
 shouldn't be in test routines anyway.
+
+## Known limitations surfaced while authoring these routines
+
+Three findings turned up while drafting the test corpus. All three
+are formally logged in
+[`tree-sitter-m/docs/discoveries.md`](https://github.com/rafael5/tree-sitter-m/blob/main/docs/discoveries.md);
+the upstream-actionable one is also on m-standard's
+[`docs/build-log.md` BL-014](https://github.com/rafael5/m-standard/blob/main/docs/build-log.md#bl-014).
+Summarised here so test-routine authors don't trip on them again:
+
+- **[DISC-001](https://github.com/rafael5/tree-sitter-m/blob/main/docs/discoveries.md#disc-001)** —
+  YDB/IRIS list-function 2-letter abbreviations (`$LB`, `$LI`,
+  `$LL`, etc.) aren't in `m-standard/integrated/grammar-surface.json`
+  yet, so they parse as ERROR. Use canonical full names
+  (`$LISTBUILD`, `$LISTGET`, `$LISTLENGTH`) until the upstream fix
+  ships.
+- **[DISC-002](https://github.com/rafael5/tree-sitter-m/blob/main/docs/discoveries.md#disc-002)** —
+  The negated compound operators `'[`, `']`, `']]` lex as a single
+  token only when there's no whitespace between the operator and
+  the right-hand side. Write `S1'["z"`, not `S1'[ "z"`. Real M is
+  written without operator spacing, so this is rarely an issue
+  outside hand-typed test fixtures.
+- **[DISC-003](https://github.com/rafael5/tree-sitter-m/blob/main/docs/discoveries.md#disc-003)** —
+  By-reference (`.VAR`) doesn't accept globals (`.^GBL`). Globals
+  in M are already by-name, so the construct is semantically
+  meaningless; don't write it. Pass `.@NAME` (indirection) for the
+  general case.
