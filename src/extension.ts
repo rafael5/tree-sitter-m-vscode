@@ -226,6 +226,106 @@ export function activate(context: vscode.ExtensionContext): void {
       );
     }),
   );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('tree-sitter-m.openAllInWorkspace', async () => {
+      const folders = vscode.workspace.workspaceFolders;
+      if (!folders || folders.length === 0) {
+        vscode.window.showWarningMessage('Open a folder first (File → Open Folder…).');
+        return;
+      }
+      const cap = 200;
+      const files = await vscode.workspace.findFiles('**/*.{m,mac,int}', null, cap);
+      if (files.length === 0) {
+        vscode.window.showInformationMessage('No M files (.m / .mac / .int) found in this workspace.');
+        return;
+      }
+      for (const uri of files) {
+        const doc = await vscode.workspace.openTextDocument(uri);
+        await vscode.window.showTextDocument(doc, { preview: false, preserveFocus: true });
+      }
+      const more = files.length === cap ? ` (capped at ${cap})` : '';
+      vscode.window.showInformationMessage(
+        `tree-sitter-m: opened ${files.length} M file(s) as tabs${more}.`,
+      );
+    }),
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('tree-sitter-m.smokeReport', async () => {
+      const folders = vscode.workspace.workspaceFolders;
+      if (!folders || folders.length === 0) {
+        vscode.window.showWarningMessage('Open a folder first (File → Open Folder…).');
+        return;
+      }
+
+      const channel = vscode.window.createOutputChannel('M Smoke Report');
+      channel.show(true);
+      channel.appendLine(`tree-sitter-m smoke report — workspace: ${folders.map((f) => f.uri.fsPath).join(', ')}`);
+      channel.appendLine('');
+
+      const cap = 5000;
+      const files = await vscode.workspace.findFiles('**/*.{m,mac,int}', null, cap);
+      if (files.length === 0) {
+        channel.appendLine('No M files (.m / .mac / .int) found.');
+        return;
+      }
+      channel.appendLine(`Found ${files.length} M file(s)${files.length === cap ? ` (capped at ${cap})` : ''}. Parsing...`);
+      channel.appendLine('');
+
+      const parser = await getParser(context.extensionPath);
+      const errored: { path: string; firstErrorLine: number }[] = [];
+      const t0 = Date.now();
+      let totalBytes = 0;
+      let cleanCount = 0;
+      for (const uri of files) {
+        let src: string;
+        try {
+          const buf = await vscode.workspace.fs.readFile(uri);
+          src = Buffer.from(buf).toString('utf8');
+        } catch (e) {
+          channel.appendLine(`READ FAIL  ${uri.fsPath}: ${e instanceof Error ? e.message : String(e)}`);
+          continue;
+        }
+        totalBytes += src.length;
+        const tree = parser.parse(src);
+        if (tree && tree.rootNode.hasError) {
+          // Find the first ERROR / MISSING node line.
+          let firstErrorLine = -1;
+          const stack: Node[] = [tree.rootNode];
+          while (stack.length > 0 && firstErrorLine < 0) {
+            const n = stack.pop()!;
+            if (n.type === 'ERROR' || n.isMissing) {
+              firstErrorLine = n.startPosition.row + 1;
+              break;
+            }
+            for (let i = n.namedChildCount - 1; i >= 0; i--) {
+              const c = n.namedChild(i);
+              if (c) stack.push(c);
+            }
+          }
+          errored.push({ path: vscode.workspace.asRelativePath(uri), firstErrorLine });
+        } else {
+          cleanCount++;
+        }
+      }
+      const elapsed = Date.now() - t0;
+
+      channel.appendLine(`Clean:  ${cleanCount} / ${files.length}  (${(100 * cleanCount / files.length).toFixed(2)}%)`);
+      channel.appendLine(`Errors: ${errored.length}`);
+      channel.appendLine(`Elapsed: ${elapsed} ms  (${(totalBytes / 1024 / Math.max(elapsed, 1) * 1000).toFixed(1)} KiB/s)`);
+      if (errored.length > 0) {
+        channel.appendLine('');
+        channel.appendLine('Files with parse errors (first ERROR / MISSING line):');
+        for (const e of errored.slice(0, 200)) {
+          channel.appendLine(`  L${String(e.firstErrorLine).padStart(5)}  ${e.path}`);
+        }
+        if (errored.length > 200) {
+          channel.appendLine(`  ... and ${errored.length - 200} more.`);
+        }
+      }
+    }),
+  );
 }
 
 export function deactivate(): void {

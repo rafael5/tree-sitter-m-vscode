@@ -74,6 +74,46 @@ If semantic tokens never appear, check that
 `editor.semanticHighlighting.enabled` resolves to `true` for `[m]` —
 the extension defaults it on, but the user may have overridden.
 
+## Batch testing a directory of M routines
+
+Three ways, increasing power:
+
+### 1. CLI: open all routines as tabs
+
+```bash
+scripts/open-all.sh                          # default: test-routines/, max 50 tabs
+scripts/open-all.sh ~/vista-meta/Packages    # walk a real corpus
+scripts/open-all.sh test-routines 200        # raise the cap
+scripts/open-all.sh test-routines all        # no cap (careful with large corpora)
+```
+
+Opens the directory as a workspace, then opens every `.m` / `.mac` /
+`.int` file under it as a separate tab. Click through the tabs to
+verify highlighting visually.
+
+### 2. Extension command: open all M files in this workspace
+
+Open a folder in VS Code (File → Open Folder…), then Command Palette
+(Ctrl/Cmd+Shift+P) → **M (MUMPS): Open all M files in workspace as
+tabs**. Capped at 200 to keep VS Code responsive.
+
+### 3. Extension command: smoke-report all M files in this workspace
+
+Command Palette → **M (MUMPS): Smoke-report all M files in
+workspace**. Parses every `.m` / `.mac` / `.int` file under the
+workspace via the same WASM parser the highlighter uses, then opens
+an Output panel listing:
+
+- Clean / total file count and percentage.
+- Total bytes parsed + throughput.
+- Every file with a parse error, plus the first ERROR / MISSING
+  line so you can jump straight to the problem.
+
+Capped at 5,000 files per run. Perfect for pointing at the VistA
+corpus and confirming that any visual highlighting issue you see is
+*not* a parse failure (or, conversely, finding the routine that the
+grammar still chokes on).
+
 ## Packaging and publishing
 
 ```bash

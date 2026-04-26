@@ -64,6 +64,14 @@
       {
         "command": "tree-sitter-m.about",
         "title": "M (MUMPS): About this extension"
+      },
+      {
+        "command": "tree-sitter-m.openAllInWorkspace",
+        "title": "M (MUMPS): Open all M files in workspace as tabs"
+      },
+      {
+        "command": "tree-sitter-m.smokeReport",
+        "title": "M (MUMPS): Smoke-report all M files in workspace"
       }
     ]
   },
