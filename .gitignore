@@ -1,6 +1,9 @@
 node_modules/
 out/
-dist/
 *.vsix
 .vscode-test/
 .DS_Store
+
+# dist/ is committed — it bundles tree-sitter-m.wasm (built via docker
+# emscripten; see scripts/build-wasm.sh). Users without docker should
+# still be able to clone-and-package the extension.

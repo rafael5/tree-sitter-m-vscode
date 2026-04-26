@@ -1,7 +1,7 @@
 {
   "name": "tree-sitter-m-vscode",
   "displayName": "M (MUMPS)",
-  "description": "Syntax highlighting and language support for the M (MUMPS) programming language. Powered by tree-sitter-m once the npm package publishes.",
+  "description": "Syntax highlighting and language support for the M (MUMPS) programming language. Powered by tree-sitter-m via web-tree-sitter (WASM).",
   "version": "0.1.0",
   "publisher": "rafael5",
   "license": "AGPL-3.0",
@@ -75,12 +75,16 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "package": "vsce package",
-    "lint": "tsc -noEmit -p ./"
+    "lint": "tsc -noEmit -p ./",
+    "build-wasm": "scripts/build-wasm.sh"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/vscode": "^1.85.0",
     "@vscode/vsce": "^3.0.0",
     "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "web-tree-sitter": "^0.25.10"
   }
 }

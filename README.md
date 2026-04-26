@@ -6,69 +6,73 @@ tree-sitter grammar for M.
 
 ## Status
 
-**v0.1 — Phase 1 (TextMate-based highlighting).** Ships the language
-declaration (file extensions `.m` / `.mac` / `.int`), comment / bracket
-/ indentation rules, and a regex-based TextMate grammar covering the
-M tokens that VS Code needs to render M source meaningfully out of the
-box. Activates `editor.semanticHighlighting.enabled` for M files so the
-Phase 2 layer light-switches on automatically once it's wired.
+**v0.1 — Two-layer highlighting.** Ships the language declaration
+(file extensions `.m` / `.mac` / `.int`), comment / bracket /
+indentation rules, a regex-based TextMate grammar for cold-load
+rendering, and a `DocumentSemanticTokensProvider` powered by
+`tree-sitter-m` compiled to WASM. The TextMate grammar paints the file
+the moment it opens; the semantic-tokens layer overlays precise
+tree-sitter-driven classification once the parser warms up (a few
+dozen ms even on a large routine — see [`tree-sitter-m`'s perf
+bench](../tree-sitter-m/docs/build-log.md): 78.6 ms for a 10k-line
+synthesised routine).
 
-**v0.2 (planned, post `tree-sitter-m@0.1.0` npm publish).** Add a
-`DocumentSemanticTokensProvider` powered by `tree-sitter-m` compiled to
-WASM via `tree-sitter build --wasm`. Semantic tokens overlay the
-TextMate grammar's base tokenization with precise tree-sitter-driven
-classification (commands, intrinsic functions, special variables,
-operators, pattern codes, indirection, postconditionals, dot-block
-prefixes — all the things our grammar already distinguishes). The
-TextMate grammar stays as the cold-load fallback during the first
-parse pass.
+The provider maps every keyword node our grammar produces — commands,
+intrinsic functions, special variables (including Kernel-style vendor
+extensions), operators, pattern codes, dot-block prefixes,
+postconditionals — onto VS Code's standard semantic-token legend
+(`keyword`, `function`, `variable`, `parameter`, `string`, `number`,
+`comment`, `operator`) with `defaultLibrary` / `readonly` /
+`declaration` modifiers where they apply. Themes that style semantic
+tokens get colourised highlighting that matches the parse tree
+exactly. Themes that don't fall through to TextMate.
 
-The Phase 2 sketch lives in [`src/extension.ts`](src/extension.ts) as
-commented code so the wiring shape is reviewable before it's enabled.
+## Why WASM rather than the native Node binding
 
-## Why two phases
+VS Code extensions can't reliably load native `.node` addons across
+every consumer's OS/arch — without prebuilds, users hit a `node-gyp`
+build at install time and most don't have a C toolchain. The
+`web-tree-sitter` runtime side-steps this entirely: a single `.wasm`
+file loads via Emscripten anywhere VS Code runs (desktop and web).
 
-VS Code's tree-sitter syntax-highlighting API is still partly internal
-(Microsoft uses it for their bundled languages but the public surface
-is incremental). The `DocumentSemanticTokensProvider` route is the
-publicly stable API and works today — but it requires a parser that
-runs in the extension host, which means either:
+## Building the WASM
 
-1. A native Node binding (`tree-sitter` + `tree-sitter-m` from npm),
-   which needs prebuilt binaries for every consumer's OS/arch — or
-   they'll hit a `node-gyp` build at install time and most users
-   won't have a C toolchain handy.
-2. The `web-tree-sitter` runtime, a single .wasm file that loads
-   everywhere VS Code runs.
-
-Phase 2 will use option 2. Building the `.wasm` from `tree-sitter-m`'s
-`src/parser.c` requires emscripten, so the workflow is:
+`dist/tree-sitter-m.wasm` is **committed** — extension consumers don't
+need any build tooling. Maintainers rebuild it from the parser source
+whenever `tree-sitter-m`'s grammar changes:
 
 ```bash
-# in tree-sitter-m's repo:
-tree-sitter build --wasm
-cp tree-sitter-m.wasm ../tree-sitter-m-vscode/dist/
+npm run build-wasm
 ```
 
-This is the work that follows the `tree-sitter-m` v0.1 npm publish.
+The script (`scripts/build-wasm.sh`) shells out to
+`tree-sitter build --wasm --docker`, which pulls Emscripten via
+docker. Set `TREE_SITTER_M_REPO=/path/to/tree-sitter-m` if the parser
+repo isn't at `~/projects/tree-sitter-m/`.
 
 ## Development
 
 ```bash
-npm install
+npm install               # web-tree-sitter + dev tooling
 npm run compile           # tsc → out/
 ```
 
 In VS Code, press **F5** (or Run → Start Debugging) to launch a new
 Extension Development Host with this extension loaded. Open any `.m`
-file and you should see syntax highlighting per the active theme.
+file and you should see two-layer highlighting per the active theme:
+TextMate scopes appear immediately, semantic tokens replace them
+within milliseconds of the first parse.
 
 The breadcrumb in the Developer Tools console (Help → Toggle Developer
-Tools → Console) confirms the extension activated:
+Tools → Console) confirms activation:
 
 ```
-tree-sitter-m-vscode: activated. Phase 1 — TextMate grammar only.
+tree-sitter-m-vscode: activated.
 ```
+
+If semantic tokens never appear, check that
+`editor.semanticHighlighting.enabled` resolves to `true` for `[m]` —
+the extension defaults it on, but the user may have overridden.
 
 ## Packaging and publishing
 
