@@ -2,6 +2,7 @@
 .vscode-test/**
 src/**
 scripts/**
+test-routines/**
 .gitignore
 .gitattributes
 tsconfig.json
@@ -9,6 +10,8 @@ tsconfig.json
 **/.eslintrc.json
 **/*.map
 **/*.ts
+CONTRIBUTING.md
+package-lock.json
 
 # Trim node_modules to runtime deps only — keep web-tree-sitter (and the
 # .wasm core it loads), drop dev tooling like @types/* and typescript.
