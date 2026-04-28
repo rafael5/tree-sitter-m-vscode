@@ -20,6 +20,12 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { Parser, Language, Node, Tree } from 'web-tree-sitter';
+import {
+  LanguageClient,
+  LanguageClientOptions,
+  ServerOptions,
+  TransportKind,
+} from 'vscode-languageclient/node';
 
 // ---- Semantic token legend ------------------------------------------------
 // Token types and modifiers VS Code knows about. Themes color these via
@@ -205,6 +211,66 @@ class MSemanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
   }
 }
 
+// ---- Language Server (m-cli LSP) ------------------------------------------
+//
+// Spawns `m lsp` as a subprocess and routes LSP messages to/from it. The
+// server provides live diagnostics, format-on-save, and Quick Fix code
+// actions for .m files. See ~/projects/m-cli/src/m_cli/lsp/ for the
+// server side.
+
+let mLspClient: LanguageClient | undefined;
+
+function startMLspClient(context: vscode.ExtensionContext): void {
+  const config = vscode.workspace.getConfiguration('m-cli');
+  if (!config.get<boolean>('enabled', true)) {
+    return;
+  }
+
+  const command = config.get<string>('path', 'm');
+  const extraArgs = config.get<string[]>('args', []);
+  const args = ['lsp', ...extraArgs];
+
+  const serverOptions: ServerOptions = {
+    run: { command, args, transport: TransportKind.stdio },
+    debug: { command, args, transport: TransportKind.stdio },
+  };
+
+  const clientOptions: LanguageClientOptions = {
+    documentSelector: [
+      { scheme: 'file', language: 'm' },
+      { scheme: 'file', pattern: '**/*.m' },
+    ],
+    outputChannelName: 'm-cli LSP',
+    synchronize: {
+      configurationSection: 'm-cli',
+    },
+  };
+
+  mLspClient = new LanguageClient(
+    'm-cli-lsp',
+    'm-cli LSP',
+    serverOptions,
+    clientOptions,
+  );
+
+  mLspClient.start().catch((err) => {
+    const detail = err instanceof Error ? err.message : String(err);
+    vscode.window.showErrorMessage(
+      `m-cli LSP failed to start (${detail}). Check the "m-cli.path" setting — it should point to the \`m\` binary (e.g. ~/projects/m-cli/.venv/bin/m).`,
+    );
+    mLspClient = undefined;
+  });
+}
+
+async function stopMLspClient(): Promise<void> {
+  if (!mLspClient) return;
+  try {
+    await mLspClient.stop();
+  } finally {
+    mLspClient = undefined;
+  }
+}
+
 // ---- Activation -----------------------------------------------------------
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -217,6 +283,30 @@ export function activate(context: vscode.ExtensionContext): void {
       provider,
       LEGEND,
     ),
+  );
+
+  // Start the m-cli Language Server. Failures surface via showErrorMessage;
+  // syntax highlighting (above) keeps working even if the server can't start.
+  startMLspClient(context);
+
+  // Restart command — useful after editing settings or reinstalling m-cli.
+  context.subscriptions.push(
+    vscode.commands.registerCommand('tree-sitter-m.lsp.restart', async () => {
+      await stopMLspClient();
+      startMLspClient(context);
+      vscode.window.showInformationMessage('m-cli LSP restarted.');
+    }),
+  );
+
+  // Reflect the m-cli.* settings → server lifecycle. Most settings take
+  // effect on next start, but `enabled` flips need to start/stop right away.
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(async (e) => {
+      if (e.affectsConfiguration('m-cli')) {
+        await stopMLspClient();
+        startMLspClient(context);
+      }
+    }),
   );
 
   context.subscriptions.push(
@@ -328,7 +418,9 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 }
 
-export function deactivate(): void {
+export async function deactivate(): Promise<void> {
+  // Shut the m-cli LSP server down cleanly so its stdio loop exits.
   // The Emscripten module that backs web-tree-sitter doesn't expose a
-  // shutdown hook; resources are reclaimed when the extension host exits.
+  // shutdown hook; its resources are reclaimed when the extension host exits.
+  await stopMLspClient();
 }

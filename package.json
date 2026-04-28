@@ -101,8 +101,39 @@
       {
         "command": "tree-sitter-m.smokeReport",
         "title": "M (MUMPS): Smoke-report all M files in workspace"
+      },
+      {
+        "command": "tree-sitter-m.lsp.restart",
+        "title": "M (MUMPS): Restart Language Server"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "M (MUMPS) — m-cli LSP",
+      "properties": {
+        "m-cli.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the m-cli Language Server. Provides live lint diagnostics, format-on-save, and Quick Fix code actions for .m files."
+        },
+        "m-cli.path": {
+          "type": "string",
+          "default": "m",
+          "description": "Path to the `m` CLI binary. Defaults to looking for `m` on PATH. Set this to an absolute path if m-cli is installed in a virtualenv (e.g. /home/you/projects/m-cli/.venv/bin/m)."
+        },
+        "m-cli.args": {
+          "type": "array",
+          "default": [],
+          "items": { "type": "string" },
+          "description": "Extra arguments passed to `m lsp` (the subcommand is added automatically). Example: [\"--verbose\"]."
+        },
+        "m-cli.trace.server": {
+          "type": "string",
+          "enum": ["off", "messages", "verbose"],
+          "default": "off",
+          "description": "Log LSP messages between the editor and the m-cli server (visible in the Output panel under \"m-cli LSP\")."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -119,6 +150,7 @@
     "typescript": "^5.4.0"
   },
   "dependencies": {
+    "vscode-languageclient": "^9.0.1",
     "web-tree-sitter": "^0.25.10"
   }
 }
