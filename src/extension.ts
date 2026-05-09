@@ -215,8 +215,8 @@ class MSemanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
 //
 // Spawns `m lsp` as a subprocess and routes LSP messages to/from it. The
 // server provides live diagnostics, format-on-save, and Quick Fix code
-// actions for .m files. See ~/projects/m-cli/src/m_cli/lsp/ for the
-// server side.
+// actions for .m files. Server side:
+// https://github.com/m-dev-tools/m-cli/tree/main/src/m_cli/lsp/
 
 let mLspClient: LanguageClient | undefined;
 
@@ -256,7 +256,7 @@ function startMLspClient(context: vscode.ExtensionContext): void {
   mLspClient.start().catch((err) => {
     const detail = err instanceof Error ? err.message : String(err);
     vscode.window.showErrorMessage(
-      `m-cli LSP failed to start (${detail}). Check the "m-cli.path" setting — it should point to the \`m\` binary (e.g. ~/projects/m-cli/.venv/bin/m).`,
+      `m-cli LSP failed to start (${detail}). Check the "m-cli.path" setting — it should point to the \`m\` binary (e.g. /usr/local/bin/m, or .venv/bin/m inside an m-cli checkout).`,
     );
     mLspClient = undefined;
   });
