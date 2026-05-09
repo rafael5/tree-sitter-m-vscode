@@ -169,7 +169,7 @@ Three workflows, increasing in power:
 
 ```bash
 scripts/open-all.sh                          # default: test-routines/, max 50 tabs
-scripts/open-all.sh ~/vista-meta/Packages    # walk a real corpus
+scripts/open-all.sh /path/to/some/Packages   # walk a real corpus (e.g. m-modern-corpus)
 scripts/open-all.sh test-routines 200        # raise the cap
 scripts/open-all.sh test-routines all        # no cap (careful with large corpora)
 ```
@@ -288,10 +288,17 @@ For build/release details see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 - **[`tree-sitter-m`](https://github.com/m-dev-tools/tree-sitter-m)** —
   the tree-sitter grammar this extension consumes.
-- **`m-standard`** *(planned)* — a normative reference for the M
-  language as recognised by this family of tools.
-- **`tree-sitter-m-lint`** *(planned)* — a standalone linter built on
-  the same parse tree, intended for both CLI and editor use.
+- **[`m-standard`](https://github.com/m-dev-tools/m-standard)** — the
+  citable, machine-readable reference for the M language as recognised
+  by this family of tools (commands / ISVs / functions / pragmatic +
+  SAC + operational tier classifications).
+- **[`m-cli`](https://github.com/m-dev-tools/m-cli)** — the
+  source-level toolchain: `m fmt` / `m lint` / `m test` /
+  `m coverage` / `m doc`. The companion `m lsp` Language Server is
+  spawned by this extension when m-cli is installed.
+- **[`m-stdlib-vscode`](https://github.com/m-dev-tools/m-stdlib-vscode)** —
+  manifest-driven hover / goto-def / completion for `m-stdlib`'s
+  `STD*` symbols. Install both for the full editor experience.
 
 ## Contributing
 
