@@ -60,7 +60,7 @@ CMDS ;tree-sitter-m: every command keyword
  ;
  ; --- Z extensions (YDB / IRIS / multi-vendor) --------------------
  ZALLOCATE ^X
- ZBREAK
+ ZBREAK  
  ZCOMPILE
  ZCONTINUE
  ZDEALLOCATE ^X

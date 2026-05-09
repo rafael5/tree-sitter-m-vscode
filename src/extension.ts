@@ -298,6 +298,49 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
   );
 
+  // `m-cli.runTest` is the command emitted by the LSP's CodeLens handler
+  // for each `t<UpperCase>(pass,fail)` test label in `*TST.m` suite files.
+  // Click → run `m test <file>::<label>` in a reusable terminal.
+  //
+  // Env scrubbing: m-cli's runner *honors* an inherited `ydb_routines` if
+  // the user already exported one (e.g. from a `source ydb-env.sh` in a
+  // different project). When VS Code's terminal inherits a stale value,
+  // `^SUITE` isn't on ydb's routines path, the test label silently no-ops,
+  // and TESTRUN reports 0/0 assertions. We prefix the invocation with
+  // `env -u` to wipe the three vars m-cli will otherwise re-derive
+  // correctly from the suite's filesystem path.
+  context.subscriptions.push(
+    vscode.commands.registerCommand('m-cli.runTest', async (uri: string, label: string) => {
+      if (!uri || !label) {
+        vscode.window.showErrorMessage('m-cli.runTest: missing uri or label argument.');
+        return;
+      }
+      const fileUri = vscode.Uri.parse(uri);
+      if (fileUri.scheme !== 'file') {
+        vscode.window.showErrorMessage(`m-cli.runTest: unsupported URI scheme '${fileUri.scheme}'.`);
+        return;
+      }
+      const config = vscode.workspace.getConfiguration('m-cli');
+      const mPath = config.get<string>('path', 'm');
+      // Reuse a single terminal so consecutive runs don't proliferate tabs.
+      const TERM_NAME = 'm test';
+      let term = vscode.window.terminals.find((t) => t.name === TERM_NAME);
+      if (!term) {
+        const folder = vscode.workspace.getWorkspaceFolder(fileUri);
+        term = vscode.window.createTerminal({
+          name: TERM_NAME,
+          cwd: folder?.uri.fsPath,
+        });
+      }
+      term.show(true);
+      // Quote the path defensively in case it contains spaces.
+      const quoted = `'${fileUri.fsPath.replace(/'/g, "'\\''")}'`;
+      term.sendText(
+        `env -u ydb_routines -u ydb_gbldir -u ydb_dir ${mPath} test ${quoted}::${label}`,
+      );
+    }),
+  );
+
   // Reflect the m-cli.* settings → server lifecycle. Most settings take
   // effect on next start, but `enabled` flips need to start/stop right away.
   context.subscriptions.push(
