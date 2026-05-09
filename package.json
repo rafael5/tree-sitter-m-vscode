@@ -4,7 +4,7 @@
   "description": "Syntax highlighting and language support for the M (MUMPS) programming language. Powered by tree-sitter-m via web-tree-sitter (WASM).",
   "version": "0.1.0",
   "publisher": "rafael5",
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rafael5/tree-sitter-m-vscode.git"
