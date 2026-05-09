@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TextMate grammar (`syntaxes/m.tmLanguage.json`) for cold-load
   highlighting.
 - `DocumentSemanticTokensProvider` powered by
-  [`tree-sitter-m`](https://github.com/rafael5/tree-sitter-m)
+  [`tree-sitter-m`](https://github.com/m-dev-tools/tree-sitter-m)
   compiled to WASM via `web-tree-sitter`.
 - Semantic-token scope mappings (`semanticTokenScopes`) so common
   themes colour M tokens correctly without configuration.
@@ -44,5 +44,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No theme-specific default colour bundle — relies on themes' own
   TextMate styling via `semanticTokenScopes`.
 
-[Unreleased]: https://github.com/rafael5/tree-sitter-m-vscode/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/rafael5/tree-sitter-m-vscode/releases/tag/v0.1.0
+[Unreleased]: https://github.com/m-dev-tools/tree-sitter-m-vscode/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/m-dev-tools/tree-sitter-m-vscode/releases/tag/v0.1.0

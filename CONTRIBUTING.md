@@ -52,7 +52,7 @@ background — useful while iterating.
 
 `dist/tree-sitter-m.wasm` is committed so end users (and CI) never
 need a build toolchain. Rebuild it whenever
-[`tree-sitter-m`](https://github.com/rafael5/tree-sitter-m)'s grammar
+[`tree-sitter-m`](https://github.com/m-dev-tools/tree-sitter-m)'s grammar
 changes:
 
 ```bash
@@ -126,7 +126,7 @@ to be updated:
 If a routine highlights incorrectly or the smoke-report flags it as
 malformed, the underlying issue is almost always in the grammar
 itself rather than this extension. Open issues against
-[`tree-sitter-m`](https://github.com/rafael5/tree-sitter-m/issues)
+[`tree-sitter-m`](https://github.com/m-dev-tools/tree-sitter-m/issues)
 with:
 
 - A minimal reproducing routine.

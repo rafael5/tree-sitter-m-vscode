@@ -7,13 +7,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rafael5/tree-sitter-m-vscode.git"
+    "url": "git+https://github.com/m-dev-tools/tree-sitter-m-vscode.git"
   },
   "bugs": {
-    "url": "https://github.com/rafael5/tree-sitter-m-vscode/issues"
+    "url": "https://github.com/m-dev-tools/tree-sitter-m-vscode/issues"
   },
-  "homepage": "https://github.com/rafael5/tree-sitter-m-vscode#readme",
-  "qna": "https://github.com/rafael5/tree-sitter-m-vscode/discussions",
+  "homepage": "https://github.com/m-dev-tools/tree-sitter-m-vscode#readme",
+  "qna": "https://github.com/m-dev-tools/tree-sitter-m-vscode/discussions",
   "keywords": [
     "m",
     "mumps",

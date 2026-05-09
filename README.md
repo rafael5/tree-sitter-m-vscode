@@ -2,7 +2,7 @@
 
 Syntax highlighting and language tooling for the **M (MUMPS)**
 programming language, powered by the
-[`tree-sitter-m`](https://github.com/rafael5/tree-sitter-m) grammar
+[`tree-sitter-m`](https://github.com/m-dev-tools/tree-sitter-m) grammar
 compiled to WASM.
 
 Recognises `.m`, `.mac`, and `.int` files. Works on VS Code Desktop
@@ -249,7 +249,7 @@ see [Customising colours](#customising-colours).
 ### A construct is mis-parsed (wrong syntax tree, ERROR nodes appear)
 
 That's a grammar issue, not an extension issue. File against
-[`tree-sitter-m`](https://github.com/rafael5/tree-sitter-m/issues)
+[`tree-sitter-m`](https://github.com/m-dev-tools/tree-sitter-m/issues)
 with a minimal reproducing routine. The smoke-report command makes
 finding such routines straightforward.
 
@@ -277,7 +277,7 @@ The extension ships two highlighting layers:
    precise, parse-tree-driven classification.
 
 The WASM file (`dist/tree-sitter-m.wasm`) is the
-[`tree-sitter-m`](https://github.com/rafael5/tree-sitter-m) grammar
+[`tree-sitter-m`](https://github.com/m-dev-tools/tree-sitter-m) grammar
 compiled to WebAssembly via Emscripten. Using WASM rather than the
 native Node binding avoids `node-gyp` install-time builds and works
 identically on Linux, macOS, Windows, and VS Code for the Web.
@@ -286,7 +286,7 @@ For build/release details see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Related projects
 
-- **[`tree-sitter-m`](https://github.com/rafael5/tree-sitter-m)** —
+- **[`tree-sitter-m`](https://github.com/m-dev-tools/tree-sitter-m)** —
   the tree-sitter grammar this extension consumes.
 - **`m-standard`** *(planned)* — a normative reference for the M
   language as recognised by this family of tools.
