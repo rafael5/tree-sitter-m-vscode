@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/m-dev-tools/.github/main/profile/repo.meta.schema.json",
+  "id": "tool:tree-sitter-m-vscode",
+  "repo": "https://github.com/m-dev-tools/tree-sitter-m-vscode",
+  "role": "VS Code extension — tree-sitter-m WASM syntax highlighting + LSP client (spawns `m lsp` from m-cli)",
+  "language": ["typescript"],
+  "license": "MIT",
+  "agent_instructions": "AGENTS.md",
+  "verified_on": "2026-05-10",
+  "exposes": {
+    "extension_info":         "dist/extension-info.json",
+    "package_json":           "package.json",
+    "language_configuration": "language-configuration.json"
+  },
+  "consumes": ["tool:tree-sitter-m", "tool:m-cli"],
+  "verification_commands": ["make check-manifest"],
+  "status": "active"
+}

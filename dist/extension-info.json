@@ -1,0 +1,90 @@
+{
+  "commands": [
+    {
+      "command": "tree-sitter-m.about",
+      "title": "M (MUMPS): About this extension"
+    },
+    {
+      "command": "tree-sitter-m.lsp.restart",
+      "title": "M (MUMPS): Restart Language Server"
+    },
+    {
+      "command": "tree-sitter-m.openAllInWorkspace",
+      "title": "M (MUMPS): Open all M files in workspace as tabs"
+    },
+    {
+      "command": "tree-sitter-m.smokeReport",
+      "title": "M (MUMPS): Smoke-report all M files in workspace"
+    }
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "file_associations": [
+    ".m",
+    ".mac",
+    ".int"
+  ],
+  "grammars": [
+    {
+      "language": "m",
+      "path": "./syntaxes/m.tmLanguage.json",
+      "scopeName": "source.m"
+    }
+  ],
+  "languages": [
+    {
+      "aliases": [
+        "MUMPS",
+        "M",
+        "M (MUMPS)"
+      ],
+      "configuration": "./language-configuration.json",
+      "extensions": [
+        ".m",
+        ".mac",
+        ".int"
+      ],
+      "id": "m"
+    }
+  ],
+  "license": "MIT",
+  "marketplace_id": "rafael5.tree-sitter-m-vscode",
+  "name": "tree-sitter-m-vscode",
+  "publisher": "rafael5",
+  "schema_version": "1",
+  "settings": {
+    "properties": {
+      "m-cli.args": {
+        "default": [],
+        "description": "Extra arguments passed to `m lsp` (the subcommand is added automatically). Example: [\"--verbose\"].",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "m-cli.enabled": {
+        "default": true,
+        "description": "Enable the m-cli Language Server. Provides live lint diagnostics, format-on-save, and Quick Fix code actions for .m files.",
+        "type": "boolean"
+      },
+      "m-cli.path": {
+        "default": "m",
+        "description": "Path to the `m` CLI binary. Defaults to looking for `m` on PATH. Set this to an absolute path if m-cli is installed in a virtualenv (e.g. /home/you/projects/m-cli/.venv/bin/m).",
+        "type": "string"
+      },
+      "m-cli.trace.server": {
+        "default": "off",
+        "description": "Log LSP messages between the editor and the m-cli server (visible in the Output panel under \"m-cli LSP\").",
+        "enum": [
+          "off",
+          "messages",
+          "verbose"
+        ],
+        "type": "string"
+      }
+    },
+    "title": "M (MUMPS) — m-cli LSP"
+  },
+  "version": "0.1.0"
+}
