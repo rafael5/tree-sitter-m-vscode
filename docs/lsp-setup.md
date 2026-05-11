@@ -1,3 +1,10 @@
+---
+created: 2026-04-27
+last_modified: 2026-04-27
+revisions: 1
+doc_type: [SETUP, INTEGRATION]
+---
+
 # Self-trial setup: m-cli LSP in VS Code
 
 This is the local-install path for trying the `m-cli` Language Server in
