@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "publisher": "rafael5",
   "license": "MIT",
+  "icon": "images/icon.png",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/m-dev-tools/tree-sitter-m-vscode.git"

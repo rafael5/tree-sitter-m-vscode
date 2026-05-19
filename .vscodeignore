@@ -13,6 +13,9 @@ tsconfig.json
 CONTRIBUTING.md
 package-lock.json
 
+# Source/backup art — only the squared images/icon.png ships.
+images/icon-original-*.png
+
 # Trim node_modules to runtime deps only — keep web-tree-sitter (and the
 # .wasm core it loads), drop dev tooling like @types/* and typescript.
 node_modules/@types/**
