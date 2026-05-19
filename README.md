@@ -50,17 +50,19 @@ and VS Code for the Web.
 
 ## Installation
 
-### From the VS Code Marketplace
+### From a GitHub Release (recommended)
 
-1. Open the **Extensions** view (`Ctrl+Shift+X` / `Cmd+Shift+X`).
-2. Search for **`M MUMPS`** or **`tree-sitter-m`**.
-3. Click **Install** on *M (MUMPS)* by `rafael5`.
+1. Download the latest `tree-sitter-m-vscode-<version>.vsix` from the
+   [Releases page](https://github.com/m-dev-tools/tree-sitter-m-vscode/releases).
+2. Install it from the command line:
 
-### From a `.vsix` file
+   ```bash
+   code --install-extension tree-sitter-m-vscode-<version>.vsix
+   ```
 
-```bash
-code --install-extension tree-sitter-m-vscode-<version>.vsix
-```
+   Or in VS Code: open the **Extensions** view
+   (`Ctrl+Shift+X` / `Cmd+Shift+X`) → `⋯` menu →
+   **Install from VSIX…** → pick the downloaded file.
 
 ### From source
 
