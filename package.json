@@ -2,9 +2,10 @@
   "name": "tree-sitter-m-vscode",
   "displayName": "M (MUMPS)",
   "description": "Syntax highlighting and language support for the M (MUMPS) programming language. Powered by tree-sitter-m via web-tree-sitter (WASM).",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "publisher": "rafael5",
   "license": "MIT",
+  "icon": "images/icon.png",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/m-dev-tools/tree-sitter-m-vscode.git"
@@ -64,20 +65,48 @@
       {
         "language": "m",
         "scopes": {
-          "keyword": ["keyword.control.command.m"],
-          "keyword.defaultLibrary": ["support.constant.pattern-code.m"],
-          "function": ["entity.name.function.m"],
-          "function.declaration": ["entity.name.function.label.m"],
-          "function.defaultLibrary": ["support.function.intrinsic.m"],
-          "variable": ["variable.other.m"],
-          "variable.defaultLibrary": ["support.variable.special.m"],
-          "variable.defaultLibrary.readonly": ["support.variable.special.m"],
-          "parameter": ["variable.parameter.m"],
-          "parameter.declaration": ["variable.parameter.declaration.m"],
-          "string": ["string.quoted.double.m"],
-          "number": ["constant.numeric.m"],
-          "comment": ["comment.line.semicolon.m"],
-          "operator": ["keyword.operator.m"]
+          "keyword": [
+            "keyword.control.command.m"
+          ],
+          "keyword.defaultLibrary": [
+            "support.constant.pattern-code.m"
+          ],
+          "function": [
+            "entity.name.function.m"
+          ],
+          "function.declaration": [
+            "entity.name.function.label.m"
+          ],
+          "function.defaultLibrary": [
+            "support.function.intrinsic.m"
+          ],
+          "variable": [
+            "variable.other.m"
+          ],
+          "variable.defaultLibrary": [
+            "support.variable.special.m"
+          ],
+          "variable.defaultLibrary.readonly": [
+            "support.variable.special.m"
+          ],
+          "parameter": [
+            "variable.parameter.m"
+          ],
+          "parameter.declaration": [
+            "variable.parameter.declaration.m"
+          ],
+          "string": [
+            "string.quoted.double.m"
+          ],
+          "number": [
+            "constant.numeric.m"
+          ],
+          "comment": [
+            "comment.line.semicolon.m"
+          ],
+          "operator": [
+            "keyword.operator.m"
+          ]
         }
       }
     ],
@@ -123,12 +152,18 @@
         "m-cli.args": {
           "type": "array",
           "default": [],
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Extra arguments passed to `m lsp` (the subcommand is added automatically). Example: [\"--verbose\"]."
         },
         "m-cli.trace.server": {
           "type": "string",
-          "enum": ["off", "messages", "verbose"],
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
           "default": "off",
           "description": "Log LSP messages between the editor and the m-cli server (visible in the Output panel under \"m-cli LSP\")."
         }
